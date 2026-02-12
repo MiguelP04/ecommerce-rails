@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  category_id: 1
+  title: "Reloj Oro"
+  description: "Reloj de oro de alta calidad"
+  price: 500.0
+  stock: 1
+  average_rating: 1.5
+
+two:
+  category_id: 2
+  title: "Reloj Plata"
+  description: "Reloj de plata de alta calidad"
+  price: 300.0
+  stock: 1
+  average_rating: 1.5

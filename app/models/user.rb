@@ -7,5 +7,6 @@ class User < ApplicationRecord
     private
 
     def generate_jti
-        self.jti ||= secureRandom.uuid
+        self.jti ||= SecureRandom.uuid
+    end
 end

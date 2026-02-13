@@ -1,4 +1,6 @@
 class Product < ApplicationRecord
+    belongs_to :category
+
     before_validation :generate_slug, on: :create
 
     validates :title, presence: true

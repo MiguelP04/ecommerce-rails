@@ -1,7 +1,7 @@
 class CreateProducts < ActiveRecord::Migration[7.2]
   def change
     create_table :products do |t|
-      t.bigint :category_id, null: false
+      t.references :category, null: false, foreign_key: true
       t.string :title, null: false
       t.text :description
       t.decimal :price, precision: 12, scale: 2, null: false
@@ -14,6 +14,5 @@ class CreateProducts < ActiveRecord::Migration[7.2]
       t.timestamps
     end
     add_index :products, :slug, unique: true
-    add_index :products, :category_id
   end
 end

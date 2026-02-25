@@ -1,12 +1,13 @@
 class Product < ApplicationRecord
     belongs_to :category
-    has_many :cart_items
-    has_many :carts, through: :cart_items
+
+    has_many :product_variants, dependent: :destroy
+    has_many_attached :images
 
     before_validation :generate_slug, on: :create
 
-    validates :title, presence: true
-    validates :slug, presence: true, uniqueness: true
+    validates :title, :slug, presence: true
+    validates :slug, uniqueness: true
 
     private 
 

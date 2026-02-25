@@ -12,23 +12,36 @@ end
 
 puts "Creando 50 productos aleatorios..."
 50.times do
-    nombre_producto = Faker::Commerce.product_name
-    Product.create!(
+    product_name = Faker::Commerce.product_name
+    product = Product.create!(
         category: categorias.sample,
-        title: nombre_producto,
+        title: product_name,
         description: Faker::Lorem.paragraph(sentence_count: 3),
-        price: Faker::Commerce.price(range: 10..2000.0),
-        stock: rand(1..100),
         active: true,
-        slug: "#{nombre_producto.parameterize}-#{rand(1000.9999)}",
+        slug: "#{product_name.parameterize}-#{rand(1000.9999)}",
         metadata: {
             brand: Faker::Company.name,
             material: Faker::Commerce.material
         }
     )
+
+    ["Small", "Medium", "Large"].sample(rand(2..3)).each do |option|
+        ProductVariant.create!(
+            product: product,
+            name: option,
+            sku: Faker::Barcode.unique.ean13,
+            price: Faker::Commerce.price(range: 10..2000.0),
+            stock: rand(1..100)
+        )
+    end
 end
 
-puts "Seeds terminados: Tenemos #{Category.count} categorías y #{Product.count} productos reales (Gracias a Faker)"
+
+puts "---"
+puts "Seeds terminados con éxito:" 
+puts "- Categorías: #{Category.count}"
+puts "- Productos: #{Product.count}"
+puts "- Variantes totales: #{ProductVariant.count}"
 
     
 

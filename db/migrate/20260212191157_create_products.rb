@@ -4,8 +4,6 @@ class CreateProducts < ActiveRecord::Migration[7.2]
       t.references :category, null: false, foreign_key: true
       t.string :title, null: false
       t.text :description
-      t.decimal :price, precision: 12, scale: 2, null: false
-      t.integer :stock, default: 0
       t.float :average_rating, default: 0.0
       t.boolean :active, default: true
       t.jsonb :metadata, default: {}

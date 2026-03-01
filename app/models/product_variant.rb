@@ -18,6 +18,6 @@ class ProductVariant < ApplicationRecord
   end
 
   def specification
-    option_values.map { |ov| "#{ov.option.name}: #{ov.name}" }.join(", ")
+    option_values.includes(:option).map { |ov| "#{ov.option.name}: #{ov.name}" }.join(", ")
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_24_232332) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_27_192510) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -65,6 +65,21 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_24_232332) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["slug"], name: "index_categories_on_slug", unique: true
+  end
+
+  create_table "option_values", force: :cascade do |t|
+    t.bigint "option_id", null: false
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["option_id", "name"], name: "index_option_values_on_option_id_and_name", unique: true
+    t.index ["option_id"], name: "index_option_values_on_option_id"
+  end
+
+  create_table "options", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "order_items", force: :cascade do |t|
@@ -125,14 +140,26 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_24_232332) do
     t.index ["jti"], name: "index_users_on_jti", unique: true
   end
 
+  create_table "variant_option_values", force: :cascade do |t|
+    t.bigint "product_variant_id", null: false
+    t.bigint "option_value_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["option_value_id"], name: "index_variant_option_values_on_option_value_id"
+    t.index ["product_variant_id"], name: "index_variant_option_values_on_product_variant_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "cart_items", "carts"
   add_foreign_key "cart_items", "product_variants"
   add_foreign_key "carts", "users"
+  add_foreign_key "option_values", "options"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "product_variants"
   add_foreign_key "orders", "users"
   add_foreign_key "product_variants", "products"
   add_foreign_key "products", "categories"
+  add_foreign_key "variant_option_values", "option_values"
+  add_foreign_key "variant_option_values", "product_variants"
 end

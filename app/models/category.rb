@@ -1,4 +1,5 @@
 class Category < ApplicationRecord
+    has_ancestry
     has_many :products, dependent: :restrict_with_error
 
     before_validation :generate_slug, on: :create

@@ -6,6 +6,8 @@ class Product < ApplicationRecord
 
     before_validation :generate_slug, on: :create
 
+    acts_as_taggable_on :tags
+
     validates :title, :slug, presence: true
     validates :slug, uniqueness: true
 

@@ -29,9 +29,18 @@ gem "bootsnap", require: false
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 # gem "rack-cors"
 
+# Organizes model records into a tree structure using materialized paths
+gem "ancestry"
+
+# Robust tagging system for Rails with support for multiple tag contexts
+gem "acts-as-taggable-on"
+
 group :development, :test do
   # To generate data randomly
   gem "faker"
+
+  # N+1 query detection
+  gem "bullet"
 
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

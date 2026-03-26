@@ -14,7 +14,6 @@ class Product < ApplicationRecord
     validates :slug, uniqueness: true
 
     private 
-
     def generate_slug
         self.slug ||= title.parameterize if title.present?
     end

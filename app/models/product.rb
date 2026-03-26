@@ -3,6 +3,8 @@ class Product < ApplicationRecord
 
     has_many :product_variants, dependent: :destroy
     has_many_attached :images
+    has_many :postables, as: :postable, dependent: :destroy
+    has_many :posts, through: :postables
 
     before_validation :generate_slug, on: :create
 
@@ -12,7 +14,6 @@ class Product < ApplicationRecord
     validates :slug, uniqueness: true
 
     private 
-
     def generate_slug
         self.slug ||= title.parameterize if title.present?
     end

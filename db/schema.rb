@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_02_002626) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_02_201314) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "action_text_rich_texts", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "body"
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
+  end
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -104,6 +114,23 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_02_002626) do
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
+  create_table "postables", force: :cascade do |t|
+    t.bigint "post_id", null: false
+    t.string "postable_type", null: false
+    t.bigint "postable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_postables_on_post_id"
+    t.index ["postable_type", "postable_id"], name: "index_postables_on_postable"
+  end
+
+  create_table "posts", force: :cascade do |t|
+    t.string "title", null: false
+    t.integer "status", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "product_variants", force: :cascade do |t|
     t.bigint "product_id", null: false
     t.string "name", null: false
@@ -191,6 +218,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_02_002626) do
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "product_variants"
   add_foreign_key "orders", "users"
+  add_foreign_key "postables", "posts"
   add_foreign_key "product_variants", "products"
   add_foreign_key "products", "categories"
   add_foreign_key "taggings", "tags"

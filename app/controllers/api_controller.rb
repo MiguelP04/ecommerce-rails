@@ -1,0 +1,33 @@
+class ApiController < ApplicationController
+  skip_before_action :verify_authenticity_token, if: :json_request?
+
+  private
+
+  def json_request?
+    request.format.json?
+  end
+
+  def render_success(data = nil, meta = {})
+    render json: { success: true, data: data, meta: meta }
+  end
+
+  def render_error(message, status: :unprocessable_entity)
+    render json: { success: false, error: message }, status: status
+  end
+
+  def render_not_found(message = "Resource not found")
+    render json: { success: false, error: message }, status: :not_found
+  end
+
+  def paginate(collection)
+    page = params[:page].to_i.positive? ? params[:page].to_i : 1
+    per_page = params[:per_page].to_i.positive? ? params[:per_page].to_i : 20
+
+    {
+      page: page,
+      per_page: per_page,
+      total: collection.count,
+      total_pages: (collection.count.to_f / per_page).ceil
+    }
+  end
+end

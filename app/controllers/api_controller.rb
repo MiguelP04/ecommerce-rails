@@ -1,12 +1,6 @@
 class ApiController < ApplicationController
-  skip_before_action :verify_authenticity_token, if: :json_request?
 
   private
-
-  def json_request?
-    request.format.json?
-  end
-
   def render_success(data = nil, meta = {})
     render json: { success: true, data: data, meta: meta }
   end

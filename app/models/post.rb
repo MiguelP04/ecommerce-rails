@@ -17,9 +17,9 @@ class Post < ApplicationRecord
     def broadcast_if_published
         return unless saved_change_to_status?(to: "published")
 
-        ActionCable.server.broadcast("notification_global", {
+        ActionCable.server.broadcast("notifications_global", {
             title: title,
-            link: Rails.application.routes.url_helpers.post_path(self)
+            link: "/posts/#{id}"
         })
     end
 end

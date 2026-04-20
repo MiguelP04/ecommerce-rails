@@ -1,5 +1,5 @@
 class Api::V1::ProductsController < ApiController
-  before_action :set_product, only: [:show, :update, :destroy]
+  before_action :set_product, only: [ :show, :update, :destroy ]
 
   def index
     products = Product.all
@@ -34,7 +34,7 @@ class Api::V1::ProductsController < ApiController
 
   def destroy
     @product.destroy
-    render_success({ message: "Product deleted"})
+    render_success({ message: "Product deleted" })
   end
 
   private

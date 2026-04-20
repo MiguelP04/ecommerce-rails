@@ -6,6 +6,6 @@ class CreateOptionValues < ActiveRecord::Migration[7.2]
 
       t.timestamps
     end
-    add_index :option_values, [:option_id, :name], unique: true
+    add_index :option_values, [ :option_id, :name ], unique: true
   end
 end

@@ -45,7 +45,7 @@ RSpec.describe "Api::V1::Products", type: :request do
 
   describe "POST /api/v1/products" do
     it "creates a product" do
-      product_params = { product: {title: "New Product", category_id: category.id } }
+      product_params = { product: { title: "New Product", category_id: category.id } }
 
       post "/api/v1/products", params: product_params
 
@@ -56,7 +56,7 @@ RSpec.describe "Api::V1::Products", type: :request do
     end
 
     it "returns error when title is missing" do
-      product_params = { product: { category_id: category.id} }
+      product_params = { product: { category_id: category.id } }
 
       post "/api/v1/products", params: product_params
 
@@ -66,7 +66,7 @@ RSpec.describe "Api::V1::Products", type: :request do
 
   describe "PATCH /api/v1/products/:id" do
     it "updates a product" do
-      patch "/api/v1/products/#{product.id}", params: {product: { title: "Updated Title"}}
+      patch "/api/v1/products/#{product.id}", params: { product: { title: "Updated Title" } }
 
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
@@ -84,10 +84,3 @@ RSpec.describe "Api::V1::Products", type: :request do
     end
   end
 end
-
-
-
-
-
-
-

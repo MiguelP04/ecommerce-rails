@@ -1,10 +1,10 @@
 class Api::V1::CategoriesController < ApiController
-  before_action :set_category, only: [:show, :update, :destroy]
+  before_action :set_category, only: [ :show, :update, :destroy ]
 
   def index
     categories = Category.all
     meta = paginate(categories)
-    serialized = categories.map{ |category| CategorySerializer.new(category).as_json}
+    serialized = categories.map { |category| CategorySerializer.new(category).as_json }
 
     render_success(serialized, meta)
   end
@@ -33,7 +33,7 @@ class Api::V1::CategoriesController < ApiController
 
   def destroy
     @category.destroy
-    render_success({ message: "Category deleted"})
+    render_success({ message: "Category deleted" })
   end
 
   private

@@ -10,7 +10,7 @@ Category.destroy_all
 
 puts "Creando categorias..."
 
-categories = ["Electrónica", "Hogar", "Deportes", "Belleza", "Libros"].map do |c| 
+categories = [ "Electrónica", "Hogar", "Deportes", "Belleza", "Libros" ].map do |c|
     Category.create!(name: c, slug: c.parameterize)
 end
 
@@ -18,8 +18,8 @@ puts "Creando Opciones y Valores..."
 opt_color = Option.create!(name: "Color")
 opt_size = Option.create!(name: "Talla")
 
-colors = ["Rojo", "Azul", "Negro", "Blanco"].map { |c| OptionValue.create!(option: opt_color, name: c)}
-sizes = ["S", "M", "L", "XL"].map { |t| OptionValue.create!(option: opt_size, name: t)}
+colors = [ "Rojo", "Azul", "Negro", "Blanco" ].map { |c| OptionValue.create!(option: opt_color, name: c) }
+sizes = [ "S", "M", "L", "XL" ].map { |t| OptionValue.create!(option: opt_size, name: t) }
 
 puts "Creando 50 productos aleatorios..."
 50.times do
@@ -56,7 +56,7 @@ end
 
 
 puts "---"
-puts "Seeds completados:" 
+puts "Seeds completados:"
 puts "- Opciones: #{Option.count} (Color y Talla)"
 puts "- Valores de opción: #{OptionValue.count}"
 puts "- Productos: #{Product.count}"

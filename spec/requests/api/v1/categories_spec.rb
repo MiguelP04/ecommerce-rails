@@ -25,7 +25,7 @@ RSpec.describe "Api::V1::Categories", type: :request do
 
   describe "POST /api/v1/categories" do
     it "creates a category" do
-      category_params = { category: { name: "New Category"}}
+      category_params = { category: { name: "New Category" } }
 
       post "/api/v1/categories", params: category_params
 
@@ -38,7 +38,7 @@ RSpec.describe "Api::V1::Categories", type: :request do
 
   describe "PATCH /api/v1/categories" do
     it "updates a category" do
-      patch "/api/v1/categories/#{category.id}", params: { category: { name: "Updated Category"} }
+      patch "/api/v1/categories/#{category.id}", params: { category: { name: "Updated Category" } }
 
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)

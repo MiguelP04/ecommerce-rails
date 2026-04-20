@@ -13,7 +13,7 @@ class Product < ApplicationRecord
     validates :title, :slug, presence: true
     validates :slug, uniqueness: true
 
-    private 
+    private
     def generate_slug
         self.slug ||= title.parameterize if title.present?
     end

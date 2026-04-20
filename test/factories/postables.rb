@@ -3,4 +3,4 @@ FactoryBot.define do
     association :post
     association :postable, factory: :product
   end
-end 
+end

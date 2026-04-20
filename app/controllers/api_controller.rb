@@ -1,5 +1,4 @@
 class ApiController < ApplicationController
-
   private
   def render_success(data = nil, meta = {})
     render json: { success: true, data: data, meta: meta }

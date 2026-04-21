@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe "Api::V1::Products", type: :request do
   let!(:category) { create(:category) }
-  let!(:product) { create(:product, category: category) }
+  let!(:product) { create(:product, category: category, title: "Elegant Watch", active: true) }
+  let!(:product_inactive) { create(:product, category: category, title: "Old Watch", active: false) }
 
   describe "GET /api/v1/products" do
     it "returns all products" do
@@ -21,6 +22,47 @@ RSpec.describe "Api::V1::Products", type: :request do
       json = JSON.parse(response.body)
       expect(json["meta"]["page"]).to eq(1)
       expect(json["meta"]["per_page"]).to eq(2)
+    end
+
+    it "filters by category_id" do
+      get "/api/v1/products", params: { category_id: category.id }
+
+      expect(response).to have_http_status(:ok)
+      json = JSON.parse(response.body)
+      expect(json["data"].first["category"]["id"]).to eq(category.id)
+    end
+
+    it "filters by active status" do
+      get "/api/v1/products", params: { active: "true" }
+
+      expect(response).to have_http_status(:ok)
+      json = JSON.parse(response.body)
+      expect(json["data"].all? { |p| p["active"] == true }).to be true
+    end
+
+    it "searches by query q" do
+      get "/api/v1/products", params: { q: "Elegant" }
+
+      expect(response).to have_http_status(:ok)
+      json = JSON.parse(response.body)
+      expect(json["data"].pluck("title").any? { |t| t.include?("Elegant") }).to be true
+    end
+
+    it "orders by field" do
+      get "/api/v1/products", params: { order_by: "title", direction: "asc" }
+
+      expect(response).to have_http_status(:ok)
+      json = JSON.parse(response.body)
+      expect(json["success"]).to be true
+    end
+
+    it "filters by price range" do
+      variant = create(:product_variant, product: product, price: 100)
+      get "/api/v1/products", params: { min_price: 50, max_price: 150 }
+
+      expect(response).to have_http_status(:ok)
+      json = JSON.parse(response.body)
+      expect(json["data"].pluck("id").include?(product.id)).to be true
     end
   end
 

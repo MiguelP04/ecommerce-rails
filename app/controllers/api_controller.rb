@@ -16,11 +16,12 @@ class ApiController < ApplicationController
     page = params[:page].to_i.positive? ? params[:page].to_i : 1
     per_page = params[:per_page].to_i.positive? ? params[:per_page].to_i : 20
 
+    total = collection.try(:count) || collection.length
     {
       page: page,
       per_page: per_page,
-      total: collection.count,
-      total_pages: (collection.count.to_f / per_page).ceil
+      total: total,
+      total_pages: (total.to_f / per_page).ceil
     }
   end
 end

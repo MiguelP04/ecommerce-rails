@@ -63,6 +63,10 @@ class Api::V1::ProductsController < ApiController
       result = apply_price_filters(result)
     end
 
+    if params[:min_rating].present?
+      result = result.where("average_rating >= ?", params[:min_rating])
+    end
+
     result
   end
 

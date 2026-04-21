@@ -1,8 +1,10 @@
-class NotificationChannel < ApplicationCable::Channel
+module ApplicationCable
+  class NotificationChannel < ApplicationCable::Channel
     def subscribed
-        stream_from "notification_global"
+      stream_from "notification_global"
     end
 
     def unsubscribed
     end
+  end
 end

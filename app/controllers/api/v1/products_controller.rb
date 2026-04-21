@@ -8,7 +8,8 @@ class Api::V1::ProductsController < ApiController
     products = apply_sorting(products)
 
     meta = paginate(products)
-    serialized = products.map { |product| ProductSerializer.new(product).as_json }
+    price_range = { min_price: params[:min_price].to_f, max_price: params[:max_price].to_f }
+    serialized = products.map { |product| ProductSerializer.new(product, price_range).as_json }
 
     render_success(serialized, meta)
   end

@@ -1,9 +1,10 @@
 class ProductSerializer
-  def initialize(product)
+  def initialize(product, price_range = {})
     @product = product
+    @price_range = price_range
   end
 
-def as_json
+  def as_json
     {
       id: @product.id,
       title: @product.title,
@@ -33,7 +34,13 @@ def as_json
   def variants_data
     return [] unless @product.product_variants.any?
 
-    @product.product_variants.map do |variant|
+    variants = @product.product_variants
+
+    if price_filter_applied?
+      variants = filter_variants_by_price(variants)
+    end
+
+    variants.map do |variant|
       {
         id: variant.id,
         name: variant.name,
@@ -41,6 +48,20 @@ def as_json
         price: variant.price,
         stock: variant.stock
       }
+    end
+  end
+
+  def price_filter_applied?
+    @price_range[:min_price].to_f > 0 || @price_range[:max_price].to_f > 0
+  end
+
+  def filter_variants_by_price(variants)
+    min_price = @price_range[:min_price].to_f
+    max_price = @price_range[:max_price].to_f
+
+    variants.select do |variant|
+      price = variant.price.to_f
+      (min_price == 0 || price >= min_price) && (max_price == 0 || price <= max_price)
     end
   end
 end

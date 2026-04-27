@@ -4,6 +4,7 @@ RSpec.describe "Api::V1::Products", type: :request do
   let!(:category) { create(:category) }
   let!(:product) { create(:product, category: category, title: "Elegant Watch", active: true) }
   let!(:product_inactive) { create(:product, category: category, title: "Old Watch", active: false) }
+  let!(:admin) { create(:admin) }
 
   describe "GET /api/v1/products" do
     it "returns all products" do
@@ -86,10 +87,12 @@ RSpec.describe "Api::V1::Products", type: :request do
   end
 
   describe "POST /api/v1/products" do
+    let(:token) { JwtService.encode(admin) }
+
     it "creates a product" do
       product_params = { product: { title: "New Product", category_id: category.id } }
 
-      post "/api/v1/products", params: product_params
+      post "/api/v1/products", params: product_params, headers: { "Authorization" => "Bearer #{token}" }
 
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
@@ -100,15 +103,17 @@ RSpec.describe "Api::V1::Products", type: :request do
     it "returns error when title is missing" do
       product_params = { product: { category_id: category.id } }
 
-      post "/api/v1/products", params: product_params
+      post "/api/v1/products", params: product_params, headers: { "Authorization" => "Bearer #{token}" }
 
       expect(response).to have_http_status(:unprocessable_content)
     end
   end
 
   describe "PATCH /api/v1/products/:id" do
+    let(:token) { JwtService.encode(admin) }
+
     it "updates a product" do
-      patch "/api/v1/products/#{product.id}", params: { product: { title: "Updated Title" } }
+      patch "/api/v1/products/#{product.id}", params: { product: { title: "Updated Title" } }, headers: { "Authorization" => "Bearer #{token}" }
 
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)
@@ -117,8 +122,10 @@ RSpec.describe "Api::V1::Products", type: :request do
   end
 
   describe "DELETE /api/v1/products/:id" do
+    let(:token) { JwtService.encode(admin) }
+
     it "deletes a product" do
-      delete "/api/v1/products/#{product.id}"
+      delete "/api/v1/products/#{product.id}", headers: { "Authorization" => "Bearer #{token}" }
 
       expect(response).to have_http_status(:ok)
       json = JSON.parse(response.body)

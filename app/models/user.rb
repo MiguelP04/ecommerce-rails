@@ -1,15 +1,23 @@
 class User < ApplicationRecord
-    has_one :cart, dependent: :destroy
-    has_many :orders
+  has_secure_password
 
-    before_validation :generate_jti, on: :create
+  has_one :cart, dependent: :destroy
+  has_many :orders
 
-    validates :google_uid, presence: true, uniqueness: true
-    validates :jti, presence: true, uniqueness: true
+  before_validation :generate_jti, on: :create
+  before_validation :generate_google_uid, on: :create
 
-    private
+  validates :email, presence: true, uniqueness: true
+  validates :jti, presence: true, uniqueness: true
+  validates :google_uid, uniqueness: true, allow_blank: true
 
-    def generate_jti
-        self.jti ||= SecureRandom.uuid
-    end
+  private
+
+  def generate_jti
+    self.jti ||= SecureRandom.uuid
+  end
+
+  def generate_google_uid
+    self.google_uid ||= SecureRandom.uuid
+  end
 end

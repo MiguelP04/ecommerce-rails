@@ -16,6 +16,11 @@ class ApiController < ApplicationController
     render_unauthorized("User not found")
   end
 
+  def authenticate_admin!
+    authenticate_user!
+    return render_unauthorized("Admin access required") unless @current_user&.role == "admin"
+  end
+
   def render_unauthorized(message)
     render json: { success: false, error: message }, status: :unauthorized
   end
@@ -29,10 +34,6 @@ class ApiController < ApplicationController
 
   def decode_token(token)
     JwtService.decode(token)
-  end
-
-  def devise_controller?
-    false
   end
 
   def render_success(data = nil, meta = {})

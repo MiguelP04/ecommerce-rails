@@ -35,6 +35,9 @@ gem "ancestry"
 # Robust tagging system for Rails with support for multiple tag contexts
 gem "acts-as-taggable-on"
 
+# JWT for token authentication
+gem "jwt"
+
 group :development, :test do
   # To generate data randomly
   gem "faker"

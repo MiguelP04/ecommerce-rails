@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_02_201314) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_27_204725) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -196,6 +196,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_02_201314) do
     t.string "jti", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "password_digest"
+    t.string "role"
     t.index ["google_uid"], name: "index_users_on_google_uid", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
   end

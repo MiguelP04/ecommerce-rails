@@ -1,5 +1,44 @@
 class ApiController < ApplicationController
+  attr_reader :current_user
+
   private
+
+  def authenticate_user!
+    token = extract_token_from_header
+    return unauthorized("Missing token") unless token
+
+    payload = decode_token(token)
+    return unauthorized("Invalid token") unless payload
+
+    @current_user = User.find_by(jti: payload["jti"])
+    return unauthorized("User not found") unless @current_user
+
+    @current_user
+  rescue ActiveRecord::RecordNotFound
+    unauthorized("User not found")
+  end
+
+  def authenticate_admin!
+    authenticate_user! || return
+    unauthorized("Admin access required") unless @current_user&.role == "admin"
+  end
+
+  def unauthorized(message)
+    render json: { success: false, error: message }, status: :unauthorized
+    nil
+  end
+
+  def extract_token_from_header
+    header = request.headers["Authorization"]
+    return nil unless header
+
+    header.split(" ").last if header.start_with?("Bearer ")
+  end
+
+  def decode_token(token)
+    JwtService.decode(token)
+  end
+
   def render_success(data = nil, meta = {})
     render json: { success: true, data: data, meta: meta }
   end

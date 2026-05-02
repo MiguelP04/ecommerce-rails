@@ -82,6 +82,7 @@ GEM
       logger
     ast (2.4.3)
     base64 (0.3.0)
+    bcrypt (3.1.22)
     benchmark (0.5.0)
     bigdecimal (4.0.1)
     bootsnap (1.22.0)
@@ -133,6 +134,8 @@ GEM
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     json (2.18.1)
+    jwt (3.1.2)
+      base64
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
     logger (1.7.0)
@@ -329,6 +332,7 @@ PLATFORMS
 DEPENDENCIES
   acts-as-taggable-on
   ancestry
+  bcrypt (~> 3.1.7)
   bootsnap
   brakeman
   bullet
@@ -336,6 +340,7 @@ DEPENDENCIES
   factory_bot_rails
   faker
   image_processing (~> 1.2)
+  jwt
   pg (~> 1.1)
   puma (>= 5.0)
   rails (~> 7.2.2)

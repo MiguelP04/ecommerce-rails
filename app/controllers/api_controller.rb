@@ -5,24 +5,27 @@ class ApiController < ApplicationController
 
   def authenticate_user!
     token = extract_token_from_header
-    return render_unauthorized("Missing token") unless token
+    return unauthorized("Missing token") unless token
 
     payload = decode_token(token)
-    return render_unauthorized("Invalid token") unless payload
+    return unauthorized("Invalid token") unless payload
 
     @current_user = User.find_by(jti: payload["jti"])
-    render_unauthorized("User not found") unless @current_user
+    return unauthorized("User not found") unless @current_user
+
+    @current_user
   rescue ActiveRecord::RecordNotFound
-    render_unauthorized("User not found")
+    unauthorized("User not found")
   end
 
   def authenticate_admin!
-    authenticate_user!
-    return render_unauthorized("Admin access required") unless @current_user&.role == "admin"
+    authenticate_user! || return
+    unauthorized("Admin access required") unless @current_user&.role == "admin"
   end
 
-  def render_unauthorized(message)
+  def unauthorized(message)
     render json: { success: false, error: message }, status: :unauthorized
+    nil
   end
 
   def extract_token_from_header

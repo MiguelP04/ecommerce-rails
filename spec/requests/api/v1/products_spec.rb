@@ -107,6 +107,18 @@ RSpec.describe "Api::V1::Products", type: :request do
 
       expect(response).to have_http_status(:unprocessable_content)
     end
+
+    it "rejects non-admin users" do
+      user = create(:user)
+      user_token = JwtService.encode(user)
+      product_params = { product: { title: "Unauthorized Product", category_id: category.id } }
+
+      post "/api/v1/products", params: product_params, headers: { "Authorization" => "Bearer #{user_token}" }
+
+      expect(response).to have_http_status(:unauthorized)
+      json = JSON.parse(response.body)
+      expect(json["success"]).to be false
+    end
   end
 
   describe "PATCH /api/v1/products/:id" do

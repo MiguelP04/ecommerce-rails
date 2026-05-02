@@ -1,5 +1,6 @@
 class Api::V1::CategoriesController < ApiController
   before_action :set_category, only: [ :show, :update, :destroy ]
+  before_action :authenticate_admin!, only: [ :create, :update, :destroy ]
 
   def index
     categories = Category.all

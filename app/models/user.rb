@@ -5,7 +5,6 @@ class User < ApplicationRecord
   has_many :orders
 
   before_validation :generate_jti, on: :create
-  before_validation :generate_google_uid, on: :create
   before_validation :set_default_role, on: :create
 
   validates :email, presence: true, uniqueness: true, format: { with: /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i }
@@ -17,10 +16,6 @@ class User < ApplicationRecord
 
   def generate_jti
     self.jti ||= SecureRandom.uuid
-  end
-
-  def generate_google_uid
-    self.google_uid ||= SecureRandom.uuid
   end
 
   def set_default_role

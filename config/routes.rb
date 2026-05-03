@@ -6,6 +6,12 @@ Rails.application.routes.draw do
 
       post "auth/login", to: "auth#login"
       post "auth/signup", to: "auth#signup"
+
+      get "cart", to: "carts#show"
+      post "cart/items", to: "carts#add_item"
+      patch "cart/items/:id", to: "carts#update_item"
+      delete "cart/items/:id", to: "carts#destroy_item"
+      delete "cart", to: "carts#clear"
     end
   end
 

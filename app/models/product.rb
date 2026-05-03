@@ -3,6 +3,7 @@ class Product < ApplicationRecord
 
     has_many :product_variants, dependent: :destroy
     has_many_attached :images
+    has_one_attached :cover_image
     has_many :postables, as: :postable, dependent: :destroy
     has_many :posts, through: :postables
 

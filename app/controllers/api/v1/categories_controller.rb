@@ -4,10 +4,10 @@ class Api::V1::CategoriesController < ApiController
 
   def index
     categories = Category.all
-    meta = paginate(categories)
-    serialized = categories.map { |category| CategorySerializer.new(category).as_json }
+    result = paginate(categories)
+    serialized = result[:collection].map { |category| CategorySerializer.new(category).as_json }
 
-    render_success(serialized, meta)
+    render_success(serialized, result[:meta])
   end
 
   def show

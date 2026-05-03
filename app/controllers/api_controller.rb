@@ -51,16 +51,21 @@ class ApiController < ApplicationController
     render json: { success: false, error: message }, status: :not_found
   end
 
-  def paginate(collection)
-    page = params[:page].to_i.positive? ? params[:page].to_i : 1
-    per_page = params[:per_page].to_i.positive? ? params[:per_page].to_i : 20
+def paginate(collection)
+  page = params[:page].to_i.positive? ? params[:page].to_i : 1
+  per_page = params[:per_page].to_i.positive? ? params[:per_page].to_i : 20
 
-    total = collection.try(:count) || collection.length
-    {
+  total = collection.count
+  paginated = collection.offset((page - 1) * per_page).limit(per_page)
+
+  {
+    collection: paginated,
+    meta: {
       page: page,
       per_page: per_page,
       total: total,
       total_pages: (total.to_f / per_page).ceil
     }
-  end
+  }
+end
 end

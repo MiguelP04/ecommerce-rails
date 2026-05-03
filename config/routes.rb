@@ -10,7 +10,7 @@ Rails.application.routes.draw do
       get "cart", to: "carts#show"
       post "cart/items", to: "carts#add_item"
       patch "cart/items/:id", to: "carts#update_item"
-      delete "cart/items/:id", to: "carts#remove_item"
+      delete "cart/items/:id", to: "carts#destroy_item"
       delete "cart", to: "carts#clear"
     end
   end

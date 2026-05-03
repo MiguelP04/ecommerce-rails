@@ -63,7 +63,7 @@ class Api::V1::CartsController < ApiController
     cart = current_user.cart
     return render json: { error: "Cart not found" }, status: :not_found unless cart
 
-    cart.cart_items.destroy_all!
+    cart.cart_items.destroy_all
 
     render json: CartSerializer.new(cart.reload).as_json
   end

@@ -6,6 +6,9 @@ Rails.application.routes.draw do
 
       post "auth/login", to: "auth#login"
       post "auth/signup", to: "auth#signup"
+      get "auth/me", to: "auth#me"
+      post "auth/logout", to: "auth#logout"
+      post "auth/refresh", to: "auth#refresh"
 
       get "cart", to: "carts#show"
       post "cart/items", to: "carts#add_item"

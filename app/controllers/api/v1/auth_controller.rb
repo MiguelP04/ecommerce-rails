@@ -37,6 +37,16 @@ class Api::V1::AuthController < ApiController
     render_success({ token: token })
   end
 
+  def google
+    result = OauthService.new(params[:id_token]).authenticate
+
+    if result[:error]
+      render_error(result[:error], status: :unauthorized)
+    else
+      render_success({ token: result[:token], user: result[:user] })
+    end
+  end
+
   private
 
   def user_data(user)

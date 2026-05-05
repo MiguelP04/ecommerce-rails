@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'net/http'
 
 RSpec.describe "Api::V1::Authentication", type: :request do
   let(:user) { create(:user) }
@@ -103,6 +104,66 @@ RSpec.describe "Api::V1::Authentication", type: :request do
       post "/api/v1/auth/refresh"
 
       expect(response).to have_http_status(:unauthorized)
+    end
+  end
+
+  describe "POST /api/v1/auth/google" do
+    let(:valid_id_token) { "valid_google_id_token" }
+    let(:google_payload) do
+      {
+        "email" => "googleuser@example.com",
+        "sub" => "google123",
+        "name" => "Google User",
+        "picture" => "https://example.com/avatar.jpg"
+      }
+    end
+
+    before do
+      response = double("response")
+      allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
+      allow(response).to receive(:body).and_return(google_payload.to_json)
+      allow(Net::HTTP).to receive(:get_response).and_return(response)
+    end
+
+    it "returns JWT token and user data for valid token" do
+      post "/api/v1/auth/google", params: { id_token: valid_id_token }
+
+      expect(response).to have_http_status(:ok)
+      json = JSON.parse(response.body)
+      expect(json["success"]).to be true
+      expect(json["data"]["token"]).to be_a(String)
+      expect(json["data"]["user"]["email"]).to eq("googleuser@example.com")
+      expect(json["data"]["user"]["name"]).to eq("Google User")
+    end
+
+    it "creates a new user if email does not exist" do
+      expect { post "/api/v1/auth/google", params: { id_token: valid_id_token } }.to change(User, :count).by(1)
+    end
+
+    it "finds existing user by email" do
+      create(:user, email: "googleuser@example.com", google_uid: nil)
+
+      post "/api/v1/auth/google", params: { id_token: valid_id_token }
+
+      expect(response).to have_http_status(:ok)
+      expect(User.where(email: "googleuser@example.com").count).to eq(1)
+    end
+
+    context "with invalid Google token" do
+      before do
+        response = double("response")
+        allow(response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(false)
+        allow(Net::HTTP).to receive(:get_response).and_return(response)
+      end
+
+      it "returns unauthorized" do
+        post "/api/v1/auth/google", params: { id_token: valid_id_token }
+
+        expect(response).to have_http_status(:unauthorized)
+        json = JSON.parse(response.body)
+        expect(json["success"]).to be false
+        expect(json["error"]).to eq("Invalid Google token")
+      end
     end
   end
 end

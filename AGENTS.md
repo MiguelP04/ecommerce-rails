@@ -248,6 +248,13 @@ spec/
 
 ---
 
+## Important Rules
+
+- **NEVER commit or push changes** unless explicitly asked to do so by the user. Only create commits when the user says "commit", "push", or similar explicit instructions.
+- Always work on feature branches when making changes, never on `main` or `development` directly.
+
+---
+
 ## Important Notes
 
 - **API-only mode**: No views, sessions, or cookies. Use `render json:` for responses.

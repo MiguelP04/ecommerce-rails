@@ -166,4 +166,85 @@ RSpec.describe "Api::V1::Authentication", type: :request do
       end
     end
   end
+
+  describe "POST /api/v1/auth/forgot_password" do
+    let(:user) { create(:user, email: "test@example.com") }
+
+    context "when email exists" do
+      it "generates a reset token and returns success" do
+        post "/api/v1/auth/forgot_password", params: { email: user.email }
+
+        expect(response).to have_http_status(:ok)
+        json = JSON.parse(response.body)
+        expect(json["success"]).to be true
+        expect(user.reload.reset_password_token).to be_present
+      end
+    end
+
+    context "when email does not exist" do
+      it "does not reveal that the email does not exist" do
+        post "/api/v1/auth/forgot_password", params: { email: "nonexistent@example.com" }
+
+        expect(response).to have_http_status(:ok)
+        json = JSON.parse(response.body)
+        expect(json["success"]).to be true
+      end
+    end
+  end
+
+  describe "POST /api/v1/auth/reset_password" do
+    let(:user) { create(:user) }
+    let(:new_password) { "SecurePass123" }
+
+    context "with a valid token" do
+      before do
+        PasswordResetService.generate_token(user)
+      end
+
+      it "resets the password" do
+        post "/api/v1/auth/reset_password", params: {
+          token: user.reload.reset_password_token,
+          new_password: new_password
+        }
+
+        expect(response).to have_http_status(:ok)
+        json = JSON.parse(response.body)
+        expect(json["success"]).to be true
+        expect(user.reload.authenticate(new_password)).to be_truthy
+      end
+    end
+
+    context "with an invalid token" do
+      it "returns an error" do
+        post "/api/v1/auth/reset_password", params: {
+          token: "invalid_token",
+          new_password: new_password
+        }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        json = JSON.parse(response.body)
+        expect(json["success"]).to be false
+        expect(json["error"]).to eq("Invalid token")
+      end
+    end
+
+    context "with an expired token" do
+      before do
+        PasswordResetService.generate_token(user)
+        user.update_columns(reset_password_token_expires_at: 1.minute.ago)
+      end
+
+      it "returns an error" do
+        post "/api/v1/auth/reset_password", params: {
+          token: user.reload.reset_password_token,
+          new_password: new_password
+        }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        json = JSON.parse(response.body)
+        expect(json["success"]).to be false
+        expect(json["error"]).to eq("Token expired")
+      end
+    end
+  end
 end

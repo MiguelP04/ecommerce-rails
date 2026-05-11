@@ -47,6 +47,27 @@ class Api::V1::AuthController < ApiController
     end
   end
 
+  def forgot_password
+    user = User.find_by(email: params[:email])
+
+    if user
+      token = PasswordResetService.generate_token(user)
+      UserMailer.password_reset(user, token).deliver_later
+    end
+
+    render_success({ message: "If an account with that email exists, a password reset link has been sent." })
+  end
+
+  def reset_password
+    result = PasswordResetService.reset_password(params[:token], params[:new_password])
+
+    if result[:error]
+      render_error(result[:error], status: :unprocessable_entity)
+    else
+      render_success({ message: "Password has been reset successfully." })
+    end
+  end
+
   private
 
   def user_data(user)

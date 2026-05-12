@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_03_164604) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_05_154325) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -198,8 +198,11 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_03_164604) do
     t.datetime "updated_at", null: false
     t.string "password_digest"
     t.string "role"
+    t.string "reset_password_token"
+    t.datetime "reset_password_token_expires_at"
     t.index ["google_uid"], name: "index_users_on_google_uid", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   create_table "variant_option_values", force: :cascade do |t|

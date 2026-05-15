@@ -1,6 +1,4 @@
-class Api::V1::Admin::OrdersController < ApiController
-  before_action :authenticate_admin!
-
+class Api::V1::Admin::OrdersController < Api::V1::Admin::BaseController
   def index
     orders = Order.includes(order_items: :product_variant).order(created_at: :desc)
 

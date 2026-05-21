@@ -51,6 +51,11 @@ group :development, :test do
   # RSpec for testing
   gem "rspec-rails"
 
+  # Swagger/OpenAPI documentation
+  gem "rswag-specs"
+  gem "rswag-api"
+  gem "rswag-ui"
+
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 

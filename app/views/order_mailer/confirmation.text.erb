@@ -1,0 +1,12 @@
+Hola <%= @user.name %>,
+
+Tu pedido #<%= @order.id %> ha sido confirmado.
+
+Total: $<%= @order.total %>
+
+Productos:
+<% @items.each do |item| %>
+- <%= item.product_variant.name %> x <%= item.quantity %> - $<%= item.price * item.quantity %>
+<% end %>
+
+Gracias por tu compra.

@@ -18,6 +18,16 @@ Rails.application.routes.draw do
       patch "cart/items/:id", to: "carts#update_item"
       delete "cart/items/:id", to: "carts#destroy_item"
       delete "cart", to: "carts#clear"
+
+      resources :orders, only: [ :index, :show, :create ] do
+        member do
+          patch :cancel
+        end
+      end
+
+      namespace :admin do
+        resources :orders, only: [ :index, :update ]
+      end
     end
   end
 
